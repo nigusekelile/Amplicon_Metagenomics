@@ -1,0 +1,5 @@
+index,d__Archaea;p__Euryarchaeota,d__Archaea;p__Halobacterota,d__Archaea;p__Crenarchaeota,d__Bacteria;p__Firmicutes,d__Bacteria;p__Actinobacteriota,d__Bacteria;p__Proteobacteria,d__Bacteria;p__Campylobacterota,d__Bacteria;p__Desulfobacterota,d__Eukaryota;p__Cnidaria,d__Bacteria;p__Acidobacteriota,d__Bacteria;p__Nitrospirota,d__Bacteria;p__Cyanobacteria,d__Bacteria;p__Bacteroidota,d__Archaea;p__Thermoplasmatota,d__Bacteria;p__Chloroflexi,Unassigned;__,d__Bacteria;__,d__Bacteria;p__Patescibacteria,electrode,electrode_jacket
+FAB_S22,359.0,30.0,0.0,202.0,27.0,173.0,82.0,8.0,23.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,2.0,0.0,Graphite,MEJ-DISH
+FAB_S23,2111.0,327.0,119.0,288.0,237.0,252.0,0.0,4.0,23.0,0.0,0.0,51.0,33.0,30.0,41.0,26.0,0.0,0.0,Graphite,MEJ-DISH
+MFC_S24,873.0,380.0,0.0,51.0,20.0,287.0,0.0,7.0,52.0,37.0,0.0,0.0,0.0,0.0,39.0,0.0,14.0,0.0,Graphite,No-MEJ-DISH
+MFC_S25,872.0,2088.0,0.0,159.0,46.0,277.0,0.0,109.0,26.0,90.0,38.0,0.0,0.0,0.0,47.0,12.0,9.0,10.0,Graphite,No-MEJ-DISH
