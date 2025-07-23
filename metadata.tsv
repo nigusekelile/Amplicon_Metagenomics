@@ -1,0 +1,6 @@
+sample id	electrode	electrode_jacket 
+#q2:types	categorical	categorical
+FAB_S22	Graphite	MEJ-DISH
+FAB_S23	Graphite	MEJ-DISH
+MFC_S24	Graphite	No-MEJ-DISH
+MFC_S25	Graphite	No-MEJ-DISH

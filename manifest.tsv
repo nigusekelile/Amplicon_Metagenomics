@@ -1,0 +1,5 @@
+sample id	forward-absolute-filepath	reverse-absolute-filepath
+FAB_S22	/home/nigus/mfc/raw_data/FAB_S22_R1.fastq.gz	/home/nigus/mfc/raw_data/FAB_S22_R2.fastq.gz
+FAB_S23	/home/nigus/mfc/raw_data/FAB_S23_R1.fastq.gz	/home/nigus/mfc/raw_data/FAB_S23_R2.fastq.gz
+MFC_S24	/home/nigus/mfc/raw_data/MFC_S24_R1.fastq.gz	/home/nigus/mfc/raw_data/MFC_S24_R2.fastq.gz
+MFC_S25	/home/nigus/mfc/raw_data/MFC_S25_R1.fastq.gz	/home/nigus/mfc/raw_data/MFC_S25_R2.fastq.gz
