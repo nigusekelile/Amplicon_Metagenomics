@@ -1,0 +1,11 @@
+0590a045ae55c2751c7412336fc2e145  VERSION
+6f5f3d78dad601aba6ef7a2ddbaffc7e  metadata.yaml
+5dbb05b62389cc62480dfaa57ece14c8  data/feature-table.biom
+0590a045ae55c2751c7412336fc2e145  provenance/VERSION
+2d58f2ee404e6250efab6bddd1b89953  provenance/citations.bib
+6f5f3d78dad601aba6ef7a2ddbaffc7e  provenance/metadata.yaml
+348c3d0a25ee43e79829e1505db247e2  provenance/action/action.yaml
+0590a045ae55c2751c7412336fc2e145  provenance/artifacts/033c095a-e281-4d75-832a-92aa8f883146/VERSION
+ea6ea635a6b60d2895024be1b6a7a6da  provenance/artifacts/033c095a-e281-4d75-832a-92aa8f883146/citations.bib
+4f11137abdb055101b235088d725f1b5  provenance/artifacts/033c095a-e281-4d75-832a-92aa8f883146/metadata.yaml
+fed64b85c12f5b6eea0422b024e34789  provenance/artifacts/033c095a-e281-4d75-832a-92aa8f883146/action/action.yaml
