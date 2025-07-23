@@ -6,7 +6,6 @@ qiime metadata tabulate \
 
 
 
-
 #### Importing data into QIIME 2
 
 qiime tools import \
@@ -18,8 +17,6 @@ qiime tools import \
 qiime demux summarize \
   --i-data ./demux_seqs.qza \
   --o-visualization ./demux_seqs.qzv
-
-
 
 
 
@@ -49,9 +46,6 @@ qiime feature-table summarize \
 qiime feature-table tabulate-seqs \
   --i-data ./dada2_rep_set.qza \
   --o-visualization ./dada2_rep_set.qzv
-
-
-
 
 
 
