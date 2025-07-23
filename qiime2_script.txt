@@ -1,0 +1,304 @@
+#### Metadata tabulate
+
+qiime metadata tabulate \
+  --m-input-file metadata.tsv \
+  --o-visualization metadata.qzv
+
+
+
+
+#### Importing data into QIIME 2
+
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-format PairedEndFastqManifestPhred33V2 \
+  --input-path ./manifest.tsv \
+  --output-path ./demux_seqs.qza 
+  
+qiime demux summarize \
+  --i-data ./demux_seqs.qza \
+  --o-visualization ./demux_seqs.qzv
+
+
+
+
+
+#### Sequence quality control and feature table
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs ./demux_seqs.qza \
+  --p-trim-left-f 20 \
+  --p-trim-left-r 20 \
+  --p-trunc-len-f 250 \
+  --p-trunc-len-r 200 \
+  --o-table dada2_table.qza \
+  --o-representative-sequences dada2_rep_set.qza \
+  --o-denoising-stats dada2_stats.qza
+
+
+qiime metadata tabulate \
+  --m-input-file ./dada2_stats.qza  \
+  --o-visualization ./dada2_stats.qzv
+
+
+qiime feature-table summarize \
+  --i-table ./dada2_table.qza \
+  --m-sample-metadata-file ./metadata.tsv \
+  --o-visualization ./dada2_table.qzv
+
+qiime feature-table tabulate-seqs \
+  --i-data ./dada2_rep_set.qza \
+  --o-visualization ./dada2_rep_set.qzv
+
+
+
+
+
+
+
+#### Generating a phylogenetic tree for diversity analysis
+
+
+curl -sL \
+  "https://data.qiime2.org/classifiers/sepp-ref-dbs/sepp-refs-gg-13-8.qza" > \
+  "sepp-refs-gg-13-8.qza"
+
+
+qiime fragment-insertion sepp \
+  --i-representative-sequences ./dada2_rep_set.qza \
+  --i-reference-database sepp-refs-gg-13-8.qza \
+  --o-tree ./tree.qza \
+  --o-placements ./tree_placements.qza \
+  --p-threads 8
+
+qiime diversity alpha-rarefaction \
+  --i-table ./dada2_table.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./alpha_rarefaction_curves.qzv \
+  --p-min-depth 10 \
+  --p-max-depth 3250
+
+
+
+####### 500 sampling depth
+
+qiime diversity core-metrics-phylogenetic \
+  --i-table ./dada2_table.qza \
+  --i-phylogeny ./tree.qza \
+  --m-metadata-file ./metadata.tsv \
+  --p-sampling-depth 1000 \
+  --output-dir ./core-metrics-results
+
+
+###### Alpha diversity
+
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity ./core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./core-metrics-results/faiths_pd_statistics.qzv
+
+
+qiime diversity alpha-group-significance \
+ --i-alpha-diversity ./core-metrics-results/evenness_vector.qza \
+ --m-metadata-file ./metadata.tsv \
+ --o-visualization ./core-metrics-results/evenness_statistics.qzv
+
+
+
+###### Beta Diversity 
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata.tsv \
+  --m-metadata-column electrode_jacket \
+  --o-visualization core-metrics-results/unweighted-unifrac-electrode_jacket-significance.qzv
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata.tsv \
+  --m-metadata-column electrode_jacket \
+  --o-visualization core-metrics-results/weighted-unifrac-electrode_jacket-significance.qzv
+
+
+
+
+####### 500 sampling depth
+
+qiime diversity core-metrics-phylogenetic \
+  --i-table ./dada2_table.qza \
+  --i-phylogeny ./tree.qza \
+  --m-metadata-file ./metadata.tsv \
+  --p-sampling-depth 500 \
+  --output-dir ./core-metrics-results_500
+
+
+###### Alpha diversity
+
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity ./core-metrics-results_500/faith_pd_vector.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./core-metrics-results_500/faiths_pd_statistics.qzv
+
+
+qiime diversity alpha-group-significance \
+ --i-alpha-diversity ./core-metrics-results_500/evenness_vector.qza \
+ --m-metadata-file ./metadata.tsv \
+ --o-visualization ./core-metrics-results_500/evenness_statistics.qzv
+
+
+##### Not Working  
+qiime longitudinal anova \
+  --m-metadata-file ./core-metrics-results_500/faith_pd_vector.qza \
+  --m-metadata-file ./metadata.tsv \
+  --p-formula 'faith_pd ~ electrode * electrode_jacket' \
+  --o-visualization ./core-metrics-results_500/faiths_pd_anova.qzv
+
+
+###### Beta Diversity 
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results_500/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata.tsv \
+  --m-metadata-column electrode_jacket \
+  --o-visualization core-metrics-results_500/unweighted-unifrac-electrode_jacket-significance.qzv
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results_500/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata.tsv \
+  --m-metadata-column electrode_jacket \
+  --o-visualization core-metrics-results_500/weighted-unifrac-electrode_jacket-significance.qzv
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results_500/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file metadata.tsv \
+  --m-metadata-column electrode_jacket \
+  --o-visualization core-metrics-results_500/weighted-unifrac-electrode_jacket-significance_disp.qzv \
+  --p-method permdisp
+
+
+### Taxonomy
+
+curl -sL \
+  "https://data.qiime2.org/classifiers/sklearn-1.4.2/greengenes/gg-13-8-99-515-806-nb-classifier.qza" > \
+  "gg-13-8-99-515-806-nb-classifier.qza"
+
+qiime feature-classifier classify-sklearn \
+  --i-reads ./dada2_rep_set.qza \
+  --i-classifier ./gg-13-8-99-515-806-nb-classifier.qza \
+  --o-classification ./taxonomy.qza
+
+
+qiime metadata tabulate \
+  --m-input-file ./taxonomy.qza \
+  --o-visualization ./taxonomy.qzv
+
+
+qiime feature-table tabulate-seqs \
+  --i-data ./dada2_rep_set.qza \
+  --o-visualization ./dada2_rep_set.qzv
+
+
+
+
+####  Taxonomy barchart
+
+qiime feature-table filter-samples \
+  --i-table ./dada2_table.qza \
+  --p-min-frequency 1000 \
+  --o-filtered-table ./table_1k.qza
+
+
+qiime taxa barplot \
+  --i-table ./table_1k.qza \
+  --i-taxonomy ./taxonomy.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./taxa_barplot_1k.qzv
+
+
+
+qiime feature-table filter-samples \
+  --i-table ./dada2_table.qza \
+  --p-min-frequency 500 \
+  --o-filtered-table ./table_0.5k.qza
+
+
+qiime taxa barplot \
+  --i-table ./table_0.5k.qza \
+  --i-taxonomy ./taxonomy.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./taxa_barplot_0.5k.qzv
+
+
+
+
+
+### Taxonomy with silva database (138)
+
+qiime feature-classifier classify-sklearn \
+  --i-reads ./dada2_rep_set.qza \
+  --i-classifier ./silva-138-99-nb-classifier.qza \
+  --o-classification ./taxonomy_silva/taxonomy.qza
+
+
+qiime metadata tabulate \
+  --m-input-file ./taxonomy_silva/taxonomy.qza \
+  --o-visualization ./taxonomy_silva/taxonomy.qzv
+
+
+####  Taxonomy barchart
+
+qiime feature-table filter-samples \
+  --i-table ./dada2_table.qza \
+  --p-min-frequency 500 \
+  --o-filtered-table ./taxonomy_silva/table_0.5k.qza
+
+
+qiime taxa barplot \
+  --i-table ./taxonomy_silva/table_0.5k.qza \
+  --i-taxonomy ./taxonomy_silva/taxonomy.qza \
+  --m-metadata-file ./metadata.tsv \
+  --o-visualization ./taxonomy_silva/taxa_barplot_0.5k.qzv
+
+
+
+
+######## Differential abundance with ANCOM-BC
+
+qiime feature-table filter-features \
+  --i-table ./taxonomy_silva/table_0.5k.qza \
+  --p-min-frequency 10 \
+  --p-min-samples 2 \
+  --o-filtered-table ./taxonomy_silva/table_0.5k_abund.qza
+
+qiime composition ancombc \
+  --i-table ./taxonomy_silva/table_0.5k_abund.qza \
+  --m-metadata-file ./metadata.tsv \
+  --p-formula 'electrode_jacket' \
+  --o-differentials ./taxonomy_silva/ancombc_electrode_jacket.qza
+
+qiime composition da-barplot \
+  --i-data ./taxonomy_silva/ancombc_electrode_jacket.qza \
+  --p-significance-threshold 0.001 \
+  --o-visualization ./taxonomy_silva/da_barplot_electrode_jacket.qzv
+
+
+
+############## Export Results
+Convert QIIME2 artifacts to standard formats:
+
+qiime tools export \
+  --input-path ./taxonomy_silva/taxa_barplot_0.5k.qzv \
+  --output-path ./exported
+
+qiime tools export \
+  --input-path ./taxonomy_silva/taxonomy.qzv \
+  --output-path ./exported
+
+
+
+
+
+
+
